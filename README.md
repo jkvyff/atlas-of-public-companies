@@ -1,8 +1,8 @@
-# 🗺️ Atlas of Public Companies
+# 🗺️ Atlas of Public Stocks
 
 An interactive, searchable map of publicly traded companies worldwide, visualizing thousands of company headquarters with real-time filtering by location, sector, and company name.
 
-![Atlas of Public Companies](img/screenshot.png)
+![Atlas of Public Stocks](img/screenshot.png)
 
 ## 🌟 Features
 
@@ -24,7 +24,7 @@ An interactive, searchable map of publicly traded companies worldwide, visualizi
 
 ## 🚀 Live Demo
 
-[View Live Demo](https://jkvyff.github.io/atlas-of-public-companies/) 
+[View Live Demo](https://jkvyff.github.io/atlas-of-public-stocks/) 
 
 ## 📊 Data
 
@@ -63,8 +63,8 @@ The map includes data on **15,000+ public companies** sourced from:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/jkvyff/atlas-of-public-companies.git
-   cd atlas-of-public-companies
+   git clone https://github.com/jkvyff/atlas-of-public-stocks.git
+   cd atlas-of-public-stocks
    ```
 
 2. **Start a local server**
