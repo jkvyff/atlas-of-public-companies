@@ -1,152 +1,244 @@
-# Searchable Map Template - CSV
+# 🗺️ Atlas of Public Companies
 
-You want to put your data on a searchable, filterable map. Provide a comma separated file (CSV) and this free, open source template will do the rest. This template is a successor to Derek Eder's [Fusion Tables Map Template](https://github.com/derekeder/FusionTable-Map-Template).
+An interactive, searchable map of publicly traded companies worldwide, visualizing thousands of company headquarters with real-time filtering by location, sector, and company name.
 
-**[See the working demo &raquo;](https://searchable-map-template-csv.netlify.app/)**
+![Atlas of Public Companies](img/screenshot.png)
 
-![searchable-map-template-turf](https://raw.githubusercontent.com/datamade/searchable-map-template-turf/master/img/screenshot.jpg)
+## 🌟 Features
 
-## Features
+- **🔍 Location Search**: Find companies near any address with customizable radius (from 2 blocks to 1000 miles)
+- **📊 Sector Filtering**: Color-coded markers by industry sector (Health Care, Technology, Energy, etc.)
+- **🏢 Company Search**: Search by company name with instant filtering
+- **📍 Smart Clustering**: Automatically groups nearby markers for better performance with 15,000+ data points
+- **💡 Interactive Details**: Hover for quick info, click for full company details including description, address, and website
+- **📱 Responsive Design**: Works seamlessly on desktop and mobile devices
+- **🎨 Visual Sectors**: Color-coded pins show sector at a glance:
+  - 🔵 Health Care
+  - 🟣 Technology / Communication
+  - 🟢 Financials
+  - 🟠 Energy
+  - ⚪ Materials
+  - ⚫ Industrials / Utilities
+  - 🟡 Consumer
+  - 🔴 Real Estate
 
-* address search (with variable radius and geocomplete)
-* results count
-* powered by Turfjs and plain ol' javascript
-* map and list view modes
-* large info windows when clicking on a point
-* easy customization of hover, popup and table views
-* RESTful URLs for sharing searches
-* ability to easily add additional search filters (checkboxes, sliders, etc)
-* mobile and tablet friendly using responsive design (Bootstrap 4)
-* built with HTML, CSS and Javascript - no server side code required
+## 🚀 Live Demo
 
-## Dependencies
+[View Live Demo](#) *(Add your GitHub Pages URL here)*
 
-This template depends on other JS libraries and resources:
+## 📊 Data
 
-* [Bootstrap 4](https://getbootstrap.com/) - Responsive CSS and HTML framework
-* [Leaflet](https://leafletjs.com) - Rendering the interactive map
-* [Turf.js](https://Turf.com) - Geospatial filtering
-* [Google Maps Javscript API](https://developers.google.com/maps/documentation/javascript/tutorial) - Geocoding and the Places API
-* [leaflet-color-markers](https://github.com/pointhi/leaflet-color-markers) - A set of colored map markers
-* [csv-to-geojson](https://github.com/gavinr/csv-to-geojson) - Converts CSV files to GeoJSON
-* [jQuery 3.3.1](https://jquery.com/) - Javascript utility
-* [jQuery Address](https://github.com/asual/jquery-address) - For stateful URLs
-* [Moment.js](https://momentjs.com/) - Manipulating dates and times in javascript
+The map includes data on **15,000+ public companies** sourced from:
+- [FinanceDatabase](https://github.com/JerBouma/FinanceDatabase) - Company information and sectors
+- [yfinance](https://github.com/ranaroussi/yfinance) - Detailed company profiles and addresses
+- Geocoding via [Nominatim](https://nominatim.org/) (OpenStreetMap) and optionally [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding)
+
+**Data freshness**: Last updated October 2025
+
+## 🛠️ Tech Stack
+
+- **Mapping**: [Leaflet.js](https://leafletjs.com/) with OpenStreetMap tiles
+- **Clustering**: [Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster) for performance with large datasets
+- **Spatial Analysis**: [Turf.js](https://turfjs.org/) for radius-based filtering
+- **Frontend**: Bootstrap 4, jQuery, EJS templating
+- **Data Format**: GeoJSON
+- **Data Pipeline**: Python scripts with geopy, yfinance, and FinanceDatabase
+
+## 📖 How to Use
+
+1. **Browse the Map**: Zoom and pan to explore companies worldwide
+2. **Search by Location**: Enter an address and select a radius to find nearby companies
+3. **Search by Name**: Type a company name to filter results instantly
+4. **Filter by Sector**: Use the sector dropdown to show only specific industries
+5. **View Details**: Click any marker for detailed company information
+6. **Switch Views**: Toggle between map and list view for different perspectives
+
+## 💻 Local Development
+
+### Prerequisites
+- A modern web browser
+- A local web server (Python, Node.js, or any HTTP server)
+
+### Quick Start
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/atlas-of-public-companies.git
+   cd atlas-of-public-companies
+   ```
+
+2. **Start a local server**
+   
+   Using Node.js (requires http-server):
+   ```bash
+   # First install http-server globally (one-time setup)
+   npm install -g http-server
+   
+   # Then start the server
+   http-server . -c-1
+   ```
+   
+   Or use npx (no installation needed):
+   ```bash
+   npx http-server . -c-1
+   ```
+
+   Using Python:
+   ```bash
+   python -m http.server 8000
+   ```
+
+3. **Open in browser**
+   ```
+   http://localhost:8000
+   ```
+
+## 🔄 Updating the Data
+
+The project includes Python scripts to regenerate the company data from scratch:
+
+### Step 1: Fetch Company Data
+```bash
+cd scripts
+python fetch_company_data.py
+```
+This fetches company information from FinanceDatabase and yfinance.
+
+### Step 2: Geocode Addresses
+```bash
+python geocode_addresses.py
+```
+This converts addresses to coordinates using the free Nominatim service.
+
+### Step 3: Retry Failed Geocodes (Optional)
+```bash
+export GOOGLE_MAPS_API_KEY='your-key-here'
+python geocode_with_google.py
+```
+This retries failed geocodes using Google Maps API for better accuracy.
+
+See [scripts/README.md](scripts/README.md) for detailed documentation.
 
 
-## Differences between this template and the Fusion Tables Map Template
+### Modify Sector Colors
+Edit the `getIcon()` function in `js/searchable_map_lib.js` to customize sector-to-color mappings.
 
-This template borrows heavily from Derek Eder's [Fusion Tables Map Template](https://github.com/derekeder/FusionTable-Map-Template) and follows a similar code pattern and architecture. It is intended to be easy to pick up and modify by people with limited coding experience and not require anything to be installed on your computer or server to run it. 
-
-That being said, there are some differences between this template and the Fusion Tables Map Template, namely:
-
-* **Powered by Turf.js instead of Fusion Tables**. This map has no back-end service powering it. It's all done in the browser with the help of [Turf.js](https://turfjs.org/).
-* **Using Bootstrap 4**. I upgraded to the latest version of Boostrap when building this template. There are some notable changes in syntax with these versions, [which are documented here](https://getbootstrap.com/docs/4.3/migration/).
-* **List view included by default**. I decided to include the list view mode by default, as it is the best way to view results on a mobile phone. It requires editing an additonal template `templates/table-row.ejs` but I think is worth the extra work to customize.
-* **Hover functionality**. Because it was pretty to do in Leaflet, this template includes the ability to hover over a point and see a preview of the point data before clicking on it.
-* **Data size limits**. Because this template loads all the data into your browser, there are limitations to how any points you can display. Showing more than a 1,000 points may make your browser quite slow.
-
-
-## Setup
-
-Follow the steps below and you'll be in business with your own map.
-
-### Step 1: Get and prep your data
-
-This template will work with data in [csv](https://en.wikipedia.org/wiki/Comma-separated_values) and [geojson](https://en.wikipedia.org/wiki/GeoJSON) formats.
-
-If you have an `xls` or `xlsx` spreadsheet, you can save it as a `csv` file from Excel, Numbers, Libre Office or your spreadsheet tool of choice.
-
-The `csv` file must have a latitude column and longitude column and all rows must be geocoded. If you don't have this, but have information like a street address, you'll need to [geocode](https://en.wikipedia.org/wiki/Geocode) your data.
-
-Here's a few tools for geocoding:
-
-* Google has the best geocoder in terms of accuracy. They have an [API that you can use](https://developers.google.com/maps/documentation/geocoding/start), but may cost you money depending on how many rows you have to geocode.
-* To geocode addresses inside Google Sheets, install the [free Geocoding by SmartMonkey Add-On for Google Sheets](https://gsuite.google.com/marketplace/app/geocoding_by_smartmonkey/1033231575312). See [geocoding instructions in Hands-On Data Visualization](https://handsondataviz.org/geocode.html).
-* [Geocoding in QGIS](https://www.gislounge.com/how-to-geocode-addresses-using-qgis/) (uses OpenStreetMap)
-* [BatchGeo](https://www.batchgeo.com/) 
-* [Texas A&M](http://geoservices.tamu.edu/Services/Geocode/)
-
-### Step 2: Download and edit this template 
-
-1. Download or clone this project and fire up your text editor of choice. Open up `/js/map.js` and set your map options in the `SearchableMapLib.initialize` function:
-  - `map_centroid` -  the lat/long you want your map to center on ([find yours here](https://getlatlong.net/))
-  - `filePath` - Path to your map data file. This file needs to be in csv or geojson format and placed in the `data` folder. This file's first line must be the header, and it must have a latitude column and longitude column. 
-  - `fileType` - Set if you are loading in a `csv` or `geojson` file
-2. Edit the templates in the `templates` folder for how you want your data displayed. These templates use EJS, which allows the display of your variables with HTML, as well as conditional logic. [Documentation is here](https://ejs.co/#docs). 
-  - `/templates/hover.ejs` - template for when you hover over a dot on the map
-  - `/templates/popup.ejs` - template for when a dot on the map is clicked
-  - `/templates/table-row.ejs` - template for each row in the list view
-3. Remove the custom filters and add your own. 
-  -  `index.html` - custom HTML for filters starts around line 112
-  - `/js/searchable_map_lib.js` - logic for custom filters starts around line 265
-
-### Step 3: Running it locally
-
-Once you've made your changes, you'll want to test the map to make sure it works. To view it in your browser, you'll need to run a web server on your computer. It can be any web server, but here are some ones I suggest using:
-
-* HTTP Party's [http-server](https://github.com/http-party/http-server). Once its installed, you can run `npx http-server . -c-1` from the command line.
-* If you have python installed, you can run this from the command line (note, you can see what version of python you have by typing `python --version): 
-  - python 2: `python -m SimpleHTTPServer`
-  - python 3: `python -m http.server`
-* If you have one you'd like to add to this list (especially one for Windows machines, please [add a comment to this issue](https://github.com/datamade/searchable-map-template-csv/issues/13))
-
-### Step 4: Debugging - common issues/troubleshooting
-
-If your map isn't displaying any data, try the following:
-
-1. Set the `debug` option in SearchableMapLib.initialize to `true`.
-1. Use the [Firefox page inspector](https://developer.mozilla.org/en-US/docs/Tools/Page_Inspector/UI_Tour) or  [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/). This will allow you to view and debug your javascript.
-1. Load your map in the browser and open the javascript console 
-   * Chrome DevTools on a Mac: Option+Command+J
-   * Chrome DevTools on a PC: Control+Shift+J
-   *  Firefox Page Inspector: Tools => Web Developer => Web Console) 
-1. If you do see javascript errors:
-   * The error will tell you what line it is failing on. Best to start by going there!
-   * Columns you reference from your CSV file are case sensitive and must be exaclty the same.
-
-### Step 5: Publishing your map
-
-1. Before you publish, you'll need to [get a Google API key](https://developers.google.com/maps/documentation/javascript/get-api-key). You can get on here. Replace the API key on this line of `index.html` with yours: `<script type="text/javascript" src="https://maps.google.com/maps/api/js?libraries=places&key=[YOUR KEY HERE]"></script>`
-2. Upload this map and all the supporting files and folders to your site. This map requires no back-end code, so any host will work, including GitHub pages, Netlify or your own web server.
-
-## SearchableMapLib options
-
-You can configure your map by passing in a dictionary of options when you call the `SearchableMapLib.initialize` function in `/js/map.js`. Here's an example:
-
+### Adjust Clustering
+In `js/map.js`, modify clustering settings:
 ```javascript
-SearchableMapLib.initialize({
-    filePath: 'data/chicago-flu-shot-locations-2019.csv',
-    fileType: 'csv',
-    recordName: 'flu shot location',
-    recordNamePlural: 'flu shot locations',
-    map_centroid: [41.85754, -87.66231],
-    defaultZoom:  11,
-    defaultRadius: 1610,
-    debug: false,
-  });
+useMarkerClustering: true,  // Enable/disable clustering
 ```
 
-| Option           | Default value           | Notes                                                                                                           |
-|------------------|-------------------------|-----------------------------------------------------------------------------------------------------------------|
-| map_centroid     | [41.881832, -87.623177] | Center [latitude, longitude] that your map shows when it loads. Defaults to Chicago.                            |
-| defaultZoom      | 9                      | Default zoom level when map is loaded (bigger is more zoomed in).                                               |
-| defaultRadius           | 805                     | Default search radius. Defined in meters. Default is 1/2 mile.                                                  |
-| filePath         |                         | The path to your csv or geojson file that contains your map data. This file should be put in the data directory |
-| fileType         | csv                     | File type to load in. Supports csv or geojson                                                                   |                                                                     |
-| recordName       | record                  | Used for showing the count of results.                                                                          |
-| recordNamePlural | records                 |                                                                                                                 |
-| debug            | false                   | Used to turn on helpful messages when debugging (see section on Debugging - common issues/troubleshooting)           |
+In `js/searchable_map_lib.js`, adjust cluster radius:
+```javascript
+maxClusterRadius: 25  // Smaller = more clusters
+```
 
-## Resources
+### Update Map Center
+Change the default map view in `js/map.js`:
+```javascript
+map_centroid: [37.3541, -121.9552],  // [latitude, longitude]
+defaultZoom: 3
+```
 
-For making customizations to this template
-* [Bootstrap 4 documentation](https://getbootstrap.com/docs/4.3/getting-started/introduction/)
-* [EJS documentation](https://ejs.co/#docs)
-* [Leaflet documentation](https://leafletjs.com/reference-1.5.0.html)
-* [moment.js documentation](https://momentjs.com/docs/)
+## 🌐 Deployment to GitHub Pages
 
-## Errors and Bugs
+1. **Create a new GitHub repository**
+   - Go to https://github.com/new
+   - Name it (e.g., `atlas-of-public-companies`)
+   - Don't initialize with README
 
-If something is not behaving intuitively, it is a bug, and should be reported.
-Report it here: https://github.com/datamade/searchable-map-template-turf/issues
+2. **Push your code**
+   ```bash
+   git remote set-url origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+   git add .
+   git commit -m "Initial commit: Atlas of Public Companies"
+   git push -u origin master
+   ```
+
+3. **Enable GitHub Pages**
+   - Go to repository Settings → Pages
+   - Under "Source", select `master` branch
+   - Click Save
+   - Your site will be live at: `https://YOUR_USERNAME.github.io/YOUR_REPO/`
+
+## 📝 Data Format
+
+The map expects GeoJSON with this structure:
+
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [longitude, latitude]
+      },
+      "properties": {
+        "Company Name": "Example Corp",
+        "Ticker": "EXMP",
+        "Sector": "Technology",
+        "Industry-Group": "Software & Services",
+        "Industry": "Software",
+        "Description": "Company description...",
+        "Address": "Full address string",
+        "URL": "https://example.com"
+      }
+    }
+  ]
+}
+```
+
+## 🙏 Credits & Acknowledgments
+
+- **Original Template**: [Searchable Map Template](https://github.com/datamade/searchable-map-template-csv) by [DataMade](https://datamade.us/)
+- **Data Sources**: [FinanceDatabase](https://github.com/JerBouma/FinanceDatabase), [yfinance](https://github.com/ranaroussi/yfinance)
+- **Mapping**: [Leaflet](https://leafletjs.com/), [OpenStreetMap](https://www.openstreetmap.org/)
+- **Geocoding**: [Nominatim](https://nominatim.org/), [Google Maps API](https://developers.google.com/maps/documentation/geocoding)
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. Some ideas:
+
+- Add more data sources or companies
+- Improve geocoding accuracy
+- Add additional filters (market cap, founded date, etc.)
+- Enhance mobile responsiveness
+- Add export functionality
+
+## 💡 The Story Behind This Project
+
+### The Original Atlas
+
+The original **Atlas of Public Stocks** was created by Miguel A. Barbosa to help investors find publicly traded companies near specific locations:
+
+> "Last year I was planning an investment trip to Munich, Germany and struggled to identify local public companies. I created this website to help investors facing similar situations. I hope you find it useful." - Miguel A. Barbosa
+
+### Rediscovery & Recreation
+
+This project is a recreation of that original Atlas, which went offline when Google shut down Fusion Tables in 2019. The journey to rebuild it:
+
+1. **Discovery**: Saw [Michael Fritzell's tweet](https://twitter.com/MikeFritzell/status/1844166649668890755) lamenting the loss: *"Still mourning since the day the Atlas of Publicly Listed Stocks went offline."*
+
+2. **Archaeological Research**: The Wayback Machine version didn't work, but I found:
+   - A [2013 blog post on Maps Mania](https://googlemapsmania.blogspot.com/2013/05/a-google-map-of-public-stocks.html) describing its features
+   - A [video walkthrough by the original creator](https://www.youtube.com/watch?v=-1kQ-C49ExU) showing the interface and data
+
+3. **Rebuilding with Open Data**: The original likely used Bloomberg data. This version uses free, open-source alternatives (FinanceDatabase, yfinance) to make it accessible and forkable by anyone.
+
+The goal: Recreate a useful tool that investors missed, using open-source technology and data, so it can never truly disappear again.
+
+## 📧 Contact
+
+Created by Jens Kristian Vyff - feel free to reach out with questions or suggestions!
+
+---
+
+⭐ If you find this project useful, please consider giving it a star on GitHub!
+

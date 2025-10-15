@@ -10,6 +10,7 @@ var SearchableMapLib = {
   listOrderBy: '',
   recordName: '',
   recordNamePlural: '',
+  useMarkerClustering: false,
   debug: false,
 
   // internal properties
@@ -33,6 +34,7 @@ var SearchableMapLib = {
     SearchableMapLib.recordName = options.recordName || "result",
     SearchableMapLib.recordNamePlural = options.recordNamePlural || "results",
     SearchableMapLib.radius = options.defaultRadius || 805,
+    SearchableMapLib.useMarkerClustering = options.useMarkerClustering || false,
     SearchableMapLib.debug = options.debug || false
 
     if (SearchableMapLib.debug)
@@ -49,7 +51,7 @@ var SearchableMapLib = {
 
     $(":checkbox").prop("checked", "checked");
 
-    geocoder = new google.maps.Geocoder();
+    // No need for Google geocoder - we'll use Nominatim (OpenStreetMap)
     // initiate leaflet map
     if (!SearchableMapLib.map) {
       SearchableMapLib.map = new L.Map('mapCanvas', {
@@ -58,9 +60,13 @@ var SearchableMapLib = {
         scrollWheelZoom: false
       });
 
-      SearchableMapLib.google = L.gridLayer.googleMutant({type: 'roadmap' });
+      // Use OpenStreetMap instead of Google Maps
+      var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+      });
 
-      SearchableMapLib.map.addLayer(SearchableMapLib.google);
+      SearchableMapLib.map.addLayer(osmLayer);
 
       //add hover info control
       SearchableMapLib.info = L.control({position: 'bottomleft'});
@@ -136,6 +142,9 @@ var SearchableMapLib = {
           console.log(SearchableMapLib.geojsonData);
         }
 
+        // Populate sector dropdown with unique sectors
+        SearchableMapLib.populateSectorDropdown();
+
         SearchableMapLib.doSearch();
 
       });
@@ -152,10 +161,14 @@ var SearchableMapLib = {
     }
 
     if (address != "") {
-
-      geocoder.geocode( { 'address': address }, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-          SearchableMapLib.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
+      // Use Nominatim (OpenStreetMap) geocoding instead of Google
+      $.getJSON('https://nominatim.openstreetmap.org/search', {
+        q: address,
+        format: 'json',
+        limit: 1
+      }, function(results) {
+        if (results && results.length > 0) {
+          SearchableMapLib.currentPinpoint = [parseFloat(results[0].lat), parseFloat(results[0].lon)];
           $.address.parameter('address', encodeURIComponent(address));
           $.address.parameter('radius', SearchableMapLib.radius);
           SearchableMapLib.address = address;
@@ -168,8 +181,10 @@ var SearchableMapLib = {
           SearchableMapLib.getResults();
         }
         else {
-          alert("We could not find your address: " + status);
+          alert("We could not find your address. Please try a different search.");
         }
+      }).fail(function() {
+        alert("Geocoding service is unavailable. Please try again later.");
       });
     }
     else { //search without geocoding callback
@@ -219,6 +234,9 @@ var SearchableMapLib = {
     SearchableMapLib.results_div.update(SearchableMapLib.currentResults.features.length);
 
     $('#list-result-count').html(SearchableMapLib.currentResults.features.length.toLocaleString('en') + ' ' + recname + ' found')
+    
+    // Update the blue box with the count
+    $('#results-number').html(SearchableMapLib.currentResults.features.length.toLocaleString('en') + ' public ' + recname + ' found');
   },
 
   modalPop: function(data) {
@@ -268,20 +286,42 @@ var SearchableMapLib = {
     var name_search = $("#search-name").val().replace("'", "\'");
     if (name_search != '') {
       SearchableMapLib.currentResults.features = $.grep(SearchableMapLib.currentResults.features, function(r) {
-          return r.properties["Facility Name"].toLowerCase().indexOf(name_search.toLowerCase()) > -1;
+          var companyName = r.properties["Company Name"] || r.properties["company_name"] || "";
+          return companyName.toLowerCase().indexOf(name_search.toLowerCase()) > -1;
         });
     }
     //-----end name search filter-----
 
+    //-----sector filter-----
+    var sector_filter = $("#search-sector").val();
+    if (sector_filter != '') {
+      SearchableMapLib.currentResults.features = $.grep(SearchableMapLib.currentResults.features, function(r) {
+          var sector = r.properties["Sector"] || "";
+          return sector === sector_filter;
+        });
+    }
+    //-----end sector filter-----
+
     // -----end of custom filters-----
 
-    SearchableMapLib.currentResultsLayer = L.geoJSON(SearchableMapLib.currentResults, {
+    var geojsonLayer = L.geoJSON(SearchableMapLib.currentResults, {
         pointToLayer: function (feature, latlng) {
-          return L.marker(latlng, {icon: SearchableMapLib.getIcon(feature.properties["Type"])} );
+          return L.marker(latlng, {icon: SearchableMapLib.getIcon(feature.properties["Sector"])} );
         },
         onEachFeature: onEachFeature
       }
     );
+
+    // Use marker clustering if enabled
+    if (SearchableMapLib.useMarkerClustering) {
+      SearchableMapLib.currentResultsLayer = L.markerClusterGroup({
+        showCoverageOnHover: false,
+        maxClusterRadius: 25
+      });
+      SearchableMapLib.currentResultsLayer.addLayer(geojsonLayer);
+    } else {
+      SearchableMapLib.currentResultsLayer = geojsonLayer;
+    }
 
     //messy - clean this up later
     function onEachFeature(feature, layer) {
@@ -308,7 +348,14 @@ var SearchableMapLib = {
 
   setZoom: function() {
     var zoom = '';
-    if (SearchableMapLib.radius >= 8050) zoom = 12; // 5 miles
+    if (SearchableMapLib.radius >= 1610000) zoom = 4; // 1000 miles
+    else if (SearchableMapLib.radius >= 805000) zoom = 5; // 500 miles
+    else if (SearchableMapLib.radius >= 402500) zoom = 6; // 250 miles
+    else if (SearchableMapLib.radius >= 161000) zoom = 7; // 100 miles
+    else if (SearchableMapLib.radius >= 80500) zoom = 8; // 50 miles
+    else if (SearchableMapLib.radius >= 40250) zoom = 9; // 25 miles
+    else if (SearchableMapLib.radius >= 16100) zoom = 11; // 10 miles
+    else if (SearchableMapLib.radius >= 8050) zoom = 12; // 5 miles
     else if (SearchableMapLib.radius >= 3220) zoom = 13; // 2 miles
     else if (SearchableMapLib.radius >= 1610) zoom = 14; // 1 mile
     else if (SearchableMapLib.radius >= 805) zoom = 15; // 1/2 mile
@@ -347,11 +394,44 @@ var SearchableMapLib = {
   },
 
   // -----custom functions-----
-  getIcon: function(type){
-    if (type == "Pharmacy") return redIcon;
-    if (type == "Government") return blueIcon;
-    if (type == "Other") return yellowIcon;
-    return greenIcon;
+  populateSectorDropdown: function() {
+    // Define sectors based on the color coding in getIcon
+    var sectors = [
+      'Communication Services',
+      'Consumer Discretionary',
+      'Consumer Staples',
+      'Energy',
+      'Financials',
+      'Health Care',
+      'Industrials',
+      'Information Technology',
+      'Materials',
+      'Real Estate',
+      'Utilities'
+    ];
+    
+    // Populate the dropdown
+    var dropdown = $('#search-sector');
+    sectors.forEach(function(sector) {
+      dropdown.append($('<option></option>').attr('value', sector).text(sector));
+    });
+  },
+
+  getIcon: function(sector){
+    if (!sector) return greyIcon;
+    
+    // Map sectors to colors based on the legend
+    if (sector.toLowerCase().includes("health")) return blueIcon;
+    if (sector.toLowerCase().includes("technology") || sector.toLowerCase().includes("communication")) return violetIcon;
+    if (sector.toLowerCase().includes("financial")) return greenIcon;
+    if (sector.toLowerCase().includes("energy")) return orangeIcon;
+    if (sector.toLowerCase().includes("material")) return greyIcon;
+    if (sector.toLowerCase().includes("industrial") || sector.toLowerCase().includes("utilities")) return blackIcon;
+    if (sector.toLowerCase().includes("consumer")) return yellowIcon;
+    if (sector.toLowerCase().includes("real estate")) return redIcon;
+    
+    // Default to grey for unknown sectors
+    return greyIcon;
   },
   // -----end custom functions-----
 

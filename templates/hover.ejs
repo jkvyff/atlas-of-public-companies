@@ -1,7 +1,9 @@
 <strong>
-    <%= obj["Facility Name"] %>
+    <%= obj["Company Name"] || obj["company_name"] || "N/A" %>
 </strong><br />
-<%= formatAddress(obj) %><br />
-<% if (obj["Hours"]) { %>
-    Hours: <%= obj["Hours"] %><br />
+<% if (obj["Ticker"] || obj["ticker"]) { %>
+    Ticker: <%= obj["Ticker"] || obj["ticker"] %><br />
+<% } %>
+<% if (obj["Sector"] || obj["sector"]) { %>
+    Sector: <%= obj["Sector"] || obj["sector"] %><br />
 <% } %>

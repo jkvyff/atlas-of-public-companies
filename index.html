@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html lang='en'>
   <head>
-    <title>Searchable Map Template - CSV</title>
+    <title>Atlas of Public Companies</title>
 
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta content='You want to put your data on a searchable, filterable map. Provide a comma separated file (CSV) and this free, open source template will do the rest.' name='description'>
-    <meta content='Searchable Map Template - CSV' name='author'>
+    <meta content='A map of many public companies in the world, based on FinanceDatabase data.' name='description'>
+    <meta content='Jens Kristian Vyff' name='author'>
 
     <!-- Facebook metadata -->
-    <meta content="Searchable Map Template - CSV" property="og:site_name">
-    <meta content="Searchable Map Template - CSV" property="og:title">
+    <!-- <meta content="Atlas of Public Companies" property="og:site_name">
+    <meta content="Atlas of Public Companies" property="og:title">
     <meta content="website" property="og:type">
     <meta content="You want to put your data on a searchable, filterable map. Provide a comma separated file (CSV) and this free, open source template will do the rest." property="og:description">
     <meta content="https://searchable-map-template-csv.netlify.com/" property="og:url">
-    <meta content="https://searchable-map-template-csv.netlify.com/img/screenshot.jpg" property="og:image">
+    <meta content="https://searchable-map-template-csv.netlify.com/img/screenshot.jpg" property="og:image"> -->
     
     <!-- Twitter metadata -->
-    <meta name="twitter:card" content="summary_large_image">
+    <!-- <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@DataMadeCo">
     <meta name="twitter:creator" content="@DataMadeCo">
-    <meta name="twitter:title" content="Searchable Map Template - CSV">
+    <meta name="twitter:title" content="Atlas of Public Companies">
     <meta name="twitter:url" content="https://searchable-map-template-csv.netlify.com/">
     <meta name="twitter:description" content="You want to put your data on a searchable, filterable map. Provide a comma separated file (CSV) and this free, open source template will do the rest.">
-    <meta name="twitter:image:src" content="https://searchable-map-template-csv.netlify.com/img/screenshot.jpg">
+    <meta name="twitter:image:src" content="https://searchable-map-template-csv.netlify.com/img/screenshot.jpg"> -->
 
     <!-- Styles -->
     <!-- Bootstrap cssS -->
@@ -44,13 +44,16 @@
     <script src="lib/geojson.min.js"></script>
     <script src="js/csv-to-geojson.js"></script>
 
-    <!-- Leaflet and Google -->
+    <!-- Leaflet -->
     <link rel="stylesheet" href="css/leaflet.css"/>
     <script src="lib/leaflet.js"></script>
     <script src='lib/turf.min.js'></script>
-    <script src="https://maps.google.com/maps/api/js?libraries=places&key=AIzaSyBhlf7Ayk_8nYYW5siUMTXXwvI-A6va_m0"></script>
-    <script src="lib/Leaflet.GoogleMutant.js" ></script>
     <script src="lib/leaflet-color-markers.js" ></script>
+    
+    <!-- Leaflet MarkerCluster for performance with large datasets -->
+    <link rel="stylesheet" href="css/MarkerCluster.css"/>
+    <link rel="stylesheet" href="css/MarkerCluster.Default.css"/>
+    <script src="lib/leaflet.markercluster.js"></script>
     
     <!-- Custom JavaScript -->
     <script src="js/searchable_map_lib.js"></script>
@@ -61,7 +64,7 @@
 
     <nav class="navbar navbar-expand-md navbar-light mb-2">
       <a class="navbar-brand" href="/">
-        Searchable Map Template - CSV
+        Atlas of Public Companies
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -83,8 +86,11 @@
 
       <div class='row'>
         <div class="col-md-4">
-          <p>You want to put your data on a searchable, filterable map. Provide a comma separated file (CSV) and this free, open source template will do the rest. <br /><a href='/about.html'>Read more &raquo;</a></p>
-
+          <p>Use this map to find publicly listed companies by their headquarter address near a given address. <br /><br />
+            Companies are colored by their sector. Hover over a company to see more information.
+            <a href='/about.html'>Read more &raquo;</a>
+          </p>
+          
           <div class="card bg-light">
             <div class="card-body">
               <div class='row'>
@@ -104,6 +110,13 @@
                         <option value='1610'>1 mile</option>
                         <option value='3220'>2 miles</option>
                         <option value='8050'>5 miles</option>
+                        <option value='16100'>10 miles</option>
+                        <option value='40250'>25 miles</option>
+                        <option value='80500'>50 miles</option>
+                        <option value='161000'>100 miles</option>
+                        <option value='402500'>250 miles</option>
+                        <option value='805000'>500 miles</option>
+                        <option value='1610000'>1000 miles</option>
                       </select>
                   </div>
                 </div>
@@ -112,8 +125,19 @@
               <div class='row'>
                 <div class="col-md-12">
                   <div class="form-group">
-                      Search by name
-                      <input class='form-control' id='search-name' placeholder='Enter a business or organization name' type='text'>
+                      Search by company name
+                      <input class='form-control' id='search-name' placeholder='Enter a company name' type='text'>
+                  </div>
+                </div>
+              </div>
+
+              <div class='row'>
+                <div class="col-md-12">
+                  <div class="form-group">
+                      Filter by sector
+                      <select id='search-sector' class='form-control'>
+                        <option value=''>All Sectors</option>
+                      </select>
                   </div>
                 </div>
               </div>
@@ -123,6 +147,37 @@
               <button class='btn btn-dark' id='btnViewMode' title='Change view'><i class='fa fa-list'></i> List view</button>
 
               </div>
+            </div>
+
+            <div class="card bg-primary text-white mt-3 mb-3">
+              <div class="card-body">
+                <h4 class="mb-0" id='results-count-box'>
+                  <i class='fa fa-building'></i> <span id='results-number'>Loading...</span>
+                </h4>
+              </div>
+            </div>  
+
+            <div class="card mb-3">
+              <div class="card-body p-2">
+                <small>
+                  <strong>Sector Colors:</strong><br />
+                  <span style="color: #2A81CB;">●</span> Health Care &nbsp;
+                  <span style="color: #9C2BCB;">●</span> Technology / Communication &nbsp;
+                  <span style="color: #2AAD27;">●</span> Financials<br />
+                  <span style="color: #CB8427;">●</span> Energy &nbsp;
+                  <span style="color: #7B7B7B;">●</span> Materials &nbsp;
+                  <span style="color: #3D3D3D;">●</span> Industrials / Utilities &nbsp;
+                  <span style="color: #CB9C22;">●</span> Consumer &nbsp;
+                  <span style="color: #CB2B3E;">●</span> Real Estate
+                </small>
+              </div>
+            </div>
+
+            <div>
+              <small>
+                <strong>Map Tips:</strong> Markers are clustered for better performance. Click clusters to zoom in and expand them. 
+                Click individual markers for company details, or hover to see sector and ticker.
+              </small>
             </div>
           </div>
 
@@ -135,17 +190,20 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th scope="col">Location</th>
+                      <th scope="col">Company Name</th>
+                      <th scope="col">Ticker</th>
+                      <th scope="col">Sector</th>
+                      <th scope="col">Industry-Group</th>
+                      <th scope="col">Industry</th>
                       <th scope="col">Address</th>
-                      <th scope="col">Phone</th>
-                      <th scope="col">Hours</th>
+                      <th scope="col">Website</th>
                     </tr>
                   </thead>
                   <tbody id='results-list'></tbody>
                 </table>
               </div>
             </div>
-            <p class='float-right'>Based on <a href='https://github.com/datamade/searchable-map-template-csv' target='_blank'>Searchable Map Template - CSV</a> by <a href='https://derekeder.com/' target='_blank'>Derek Eder</a> and <a href='https://datamade.us/' target='_blank'>DataMade</a></p>
+            <p class='float-right'>Based on <a href='https://github.com/datamade/searchable-map-template-csv' target='_blank'>Searchable Map Template CSV</a> by <a href='https://derekeder.com/' target='_blank'>Derek Eder</a> and <a href='https://datamade.us/' target='_blank'>DataMade</a></p>
           </div>
         </div>
 

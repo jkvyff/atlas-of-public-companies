@@ -8,17 +8,18 @@ $(window).resize(function () {
 $(function() {
 
   SearchableMapLib.initialize({
-    filePath: 'data/chicago-flu-shot-locations-2019.csv',
-    fileType: 'csv',
-    recordName: 'flu shot location',
-    recordNamePlural: 'flu shot locations',
-    map_centroid: [41.85754, -87.66231],
-    defaultZoom:  11,
+    filePath: 'data/atlas-of-public-stocks-2025.geojson',
+    fileType: 'geojson',
+    recordName: 'company',
+    recordNamePlural: 'companies',
+    map_centroid: [37.3541, -121.9552],  // Silicon Valley
+    defaultZoom:  3,  // Zoom out to see global view
     defaultRadius: 1610,
+    useMarkerClustering: true,  // Enable for large datasets (15,000+ markers)
     debug: false,
   });
 
-  var autocomplete = new google.maps.places.Autocomplete(document.getElementById('search-address'));
+  // Autocomplete removed - type addresses manually
   var modalURL;
 
   $('#btnSearch').click(function(){
@@ -39,6 +40,10 @@ $(function() {
   });
 
   $(':radio').click(function(){
+    SearchableMapLib.doSearch();
+  });
+
+  $('#search-sector').change(function(){
     SearchableMapLib.doSearch();
   });
 

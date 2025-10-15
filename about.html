@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html lang='en'>
   <head>
-    <title>Searchable Map Template - CSV</title>
+    <title>Atlas of Public Stocks</title>
 
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta content='You want to put your data on a searchable, filterable map. Provide a comma separated file (CSV) and this free, open source template will do the rest.' name='description'>
-    <meta content='Searchable Map Template - CSV' name='author'>
+    <meta content='Jens Kristian Vyff' name='author'>
 
     <!-- Facebook metadata -->
-    <meta content="Searchable Map Template - CSV" property="og:site_name">
-    <meta content="Searchable Map Template - CSV" property="og:title">
+    <meta content="Atlas of Public Stocks" property="og:site_name">
+    <meta content="Atlas of Public Stocks" property="og:title">
     <meta content="website" property="og:type">
     <meta content="You want to put your data on a searchable, filterable map. Provide a comma separated file (CSV) and this free, open source template will do the rest." property="og:description">
-    <meta content="https://searchable-map-template-csv.netlify.com/" property="og:url">
-    <meta content="https://searchable-map-template-csv.netlify.com/img/screenshot.jpg" property="og:image">
+    <!-- <meta content="https://searchable-map-template-csv.netlify.com/" property="og:url">
+    <meta content="https://searchable-map-template-csv.netlify.com/img/screenshot.jpg" property="og:image"> -->
     
     <!-- Twitter metadata -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@DataMadeCo">
     <meta name="twitter:creator" content="@DataMadeCo">
-    <meta name="twitter:title" content="Searchable Map Template - CSV">
-    <meta name="twitter:url" content="https://searchable-map-template-csv.netlify.com/">
+    <meta name="twitter:title" content="Atlas of Public Stocks">
+    <!-- <meta name="twitter:url" content="https://searchable-map-template-csv.netlify.com/"> -->
     <meta name="twitter:description" content="You want to put your data on a searchable, filterable map. Provide a comma separated file (CSV) and this free, open source template will do the rest.">
-    <meta name="twitter:image:src" content="https://searchable-map-template-csv.netlify.com/img/screenshot.jpg">
+    <!-- <meta name="twitter:image:src" content="https://searchable-map-template-csv.netlify.com/img/screenshot.jpg"> -->
 
     <!-- Styles -->
     <!-- Bootstrap CSS -->
@@ -43,7 +43,7 @@
 
     <nav class="navbar navbar-expand-md navbar-light mb-2">
       <a class="navbar-brand" href="/">
-        Searchable Map Template - CSV
+        Atlas of public companies
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -65,14 +65,70 @@
 
       <div class="container">
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-10 offset-md-1">
 
             <div class='row'>
               <div class='col-md-12'>
-                <h3 class="mt-4" id="about"><i class="fa fa-info-circle" aria-hidden="true"></i> About</h3>
-
+                <h3 class="mt-4" id="about"><i class="fa fa-info-circle" aria-hidden="true"></i> About This Project</h3>
                 
-                <p>Talk about your project here.</p>
+                <h4 class="mt-4">The Original Atlas</h4>
+                <p>The original <strong>Atlas of Public Stocks</strong> was created to help investors find publicly traded companies near specific locations. It was an incredibly useful tool for investors planning trips or researching companies in particular regions.</p>
+                
+                <blockquote>
+                  <em>"Last year I was planning an investment trip to Munich, Germany and struggled to identify local public companies. I created this website to help investors facing similar situations. I hope you find it useful."</em> - Miguel A. Barbosa, Original Creator
+                </blockquote>
+
+                <h4 class="mt-4">Why Recreate It?</h4>
+                <p>I discovered the Atlas through <a href="https://twitter.com/MikeFritzell/status/1844166649668890755" target="_blank">a tweet from Michael Fritzell</a>, who wrote: <em>"Still mourning since the day the Atlas of Publicly Listed Stocks went offline."</em> That sentiment resonated with me - this was clearly a tool people found valuable and missed.</p>
+
+                <p>Curious to learn more, I searched the <a href="https://web.archive.org" target="_blank">Wayback Machine</a> to explore the original. Unfortunately, the archived version didn't work - it relied on Google Fusion Tables, a service Google shut down in 2019. The data and functionality were lost.</p>
+
+                <h4 class="mt-4">Archaeological Reconstruction</h4>
+                <p>Determined to understand what the original Atlas could do, I started digging:</p>
+                <ul>
+                  <li>Found <a href="https://googlemapsmania.blogspot.com/2013/05/a-google-map-of-public-stocks.html" target="_blank">a 2013 blog post on Maps Mania</a> describing its features</li>
+                  <li>Discovered <a href="https://www.youtube.com/watch?v=-1kQ-C49ExU" target="_blank">a video walkthrough by the original creator</a>, showing exactly what data fields and interactions it had</li>
+                </ul>
+
+                <p>These sources gave me everything I needed to recreate the experience: company names, tickers, sectors, descriptions, addresses, and websites - all searchable by location.</p>
+
+                <h4 class="mt-4">The Data Challenge</h4>
+                <p>The original Atlas likely used proprietary data from Bloomberg or similar services. As an individual developer, I don't have access to that level of data without paying handily for it (and even if I did, I couldn't publish some of it due to licensing restrictions).</p>
+
+                <p>Instead, I built this version using free and open-source data:</p>
+                <ul>
+                  <li><strong>Company Data:</strong> <a href="https://github.com/JerBouma/FinanceDatabase" target="_blank">FinanceDatabase</a> and <a href="https://github.com/ranaroussi/yfinance" target="_blank">yfinance</a></li>
+                  <li><strong>Map Tiles:</strong> <a href="https://www.openstreetmap.org/" target="_blank">OpenStreetMap</a></li>
+                  <li><strong>Geocoding:</strong> <a href="https://nominatim.org/" target="_blank">Nominatim</a> and <a href="https://developers.google.com/maps/documentation/geocoding" target="_blank">Google Maps Geocoding API</a></li>
+                  <li><strong>Technology:</strong> <a href="https://github.com/datamade/searchable-map-template-csv" target="_blank">Searchable Map Template</a> by DataMade</li>
+                </ul>
+
+                <p>The data quality may not match Bloomberg, but the <strong>structure is there</strong>. Anyone with access to premium data sources like Bloomberg or EODHD can fork this project and replace the data with higher-quality information.</p>
+
+                <h4 class="mt-4">Open Source</h4>
+                <p>This entire project is <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank">open source on GitHub</a>. The code, data pipeline scripts, and documentation are all freely available. If you have ideas for improvements or access to better data, contributions are welcome!</p>
+
+                <h4 class="mt-4">Current Status</h4>
+                <p>The map currently includes <strong>15,000+ public companies</strong> worldwide with:</p>
+                <ul>
+                  <li>Location-based search (from 2 blocks to 1000 miles)</li>
+                  <li>Company name search</li>
+                  <li>Sector-based color coding (8 major sectors)</li>
+                  <li>Smart marker clustering for performance</li>
+                  <li>Detailed company information including descriptions, addresses, and websites</li>
+                </ul>
+
+                <p class="mt-4"><em>Data last updated: October 2025</em></p>
+
+                <hr class="mt-5">
+                
+                <h4 class="mt-4">Credits</h4>
+                <ul>
+                  <li><strong>Original Concept:</strong> Miguel A. Barbosa</li>
+                  <li><strong>This Recreation:</strong> Jens Kristian Vyff</li>
+                  <li><strong>Inspiration:</strong> <a href="https://twitter.com/MikeFritzell" target="_blank">Michael Fritzell</a>'s tweet</li>
+                  <li><strong>Map Template:</strong> <a href="https://datamade.us/" target="_blank">DataMade</a></li>
+                </ul>
 
               </div>
             </div>

@@ -56,3 +56,9 @@ a, a:hover { color: #1450A8;}
 .filter-red { background-color: #CC2537; }
 .filter-orange { background-color: #CD8518; }
 .filter-grey { background-color: #7B7B7B; }
+
+blockquote {
+  padding: 0 0 0 15px;
+  margin: 0 0 21px;
+  border-left: 5px solid #eeeeee;
+}

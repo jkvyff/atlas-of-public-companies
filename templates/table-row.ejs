@@ -1,15 +1,27 @@
 <tr>                  
     <td>
-        <%= obj["Facility Name"] %>
+        <%= obj["Company Name"] || obj["company_name"] || "N/A" %>
     </td>                  
     <td>
-        <%= formatAddress(obj) %><br />
-        (<a href='http://maps.google.com/?q=<%= formatAddress(obj) %>' target='_blank'>Get directions</a>)
+        <%= obj["Ticker"] || obj["ticker"] || "N/A" %>
     </td> 
     <td>
-        <%= obj["Phone"] %>
-    </td>                 
+        <%= obj["Sector"] || obj["sector"] || "N/A" %>
+    </td> 
     <td>
-        <%= obj["Hours"] %>
+        <%= obj["Industry-Group"] || obj["industry_group"] || obj["industrygroup"] || "N/A" %>
+    </td>                
+    <td>
+        <%= obj["Industry"] || obj["industry"] || "N/A" %>
+    </td>
+    <td>
+        <%= obj["Address"] || obj["address"] || "N/A" %>
+    </td>
+    <td>
+        <% if (obj["URL"] || obj["url"]) { %>
+            <a href='<%= obj["URL"] || obj["url"] %>' target='_blank'><%= obj["URL"] || obj["url"] %></a>
+        <% } else { %>
+            N/A 
+        <% } %>
     </td>
 </tr>

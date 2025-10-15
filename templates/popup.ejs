@@ -1,25 +1,34 @@
 <h4>
-    <%= obj["Facility Name"] %>
+    <%= obj["Company Name"] || obj["company_name"] || "N/A" %>
 </h4>             
 <p>
-    <%= formatAddress(obj) %><br />
-    <%= obj["Phone"] %><br />
+    <% if (obj["Ticker"] || obj["ticker"]) { %>
+        <strong>Ticker:</strong> <%= obj["Ticker"] || obj["ticker"] %><br />
+    <% } %>
+    
+    <% if (obj["Sector"] || obj["sector"]) { %>
+        <strong>Sector:</strong> <%= obj["Sector"] || obj["sector"] %><br />
+    <% } %>
 
-    <% if (obj["URL"]) { %>
-        <a href='<%= obj["URL"] %>' target='_blank'>Website</a>
+    <% if (obj["Industry-Group"] || obj["industry_group"] || obj["industrygroup"]) { %>
+        <strong>Industry-Group:</strong> <%= obj["Industry-Group"] || obj["industry_group"] || obj["industrygroup"] %><br />
+    <% } %>
+    
+    <% if (obj["Industry"] || obj["industry"]) { %>
+        <strong>Industry:</strong> <%= obj["Industry"] || obj["industry"] %><br />
+    <% } %>
+
+    
+    <% if (obj["Address"] || obj["address"]) { %>
+        <strong>Address:</strong> <%= obj["Address"] || obj["address"] %><br />
+    <% } %>
+    
+    <% if (obj["Website"] || obj["website"] || obj["URL"] || obj["url"]) { %>
+        <% var websiteUrl = obj["Website"] || obj["website"] || obj["URL"] || obj["url"]; %>
+        <% var displayUrl = websiteUrl.replace(/^https?:\/\//, ''); %>
+        <strong>Website:</strong> <a href='<%= websiteUrl %>' target='_blank'><%= displayUrl %></a><br />
+    <% } %>
+    <% if (obj["Description"] || obj["description"]) { %>
+        <strong>Description:</strong> <%= obj["Description"] || obj["description"] %><br />
     <% } %>
 </p>
-
-<% if (obj["Cost"]) { %>
-    <p>
-        <strong>Cost</strong><br />
-        <%= obj["Cost"] %>
-    </p>
-<% } %>
-
-<% if (obj["Hours"]) { %>
-    <p>
-        <strong>Hours</strong><br />
-        <%= obj["Hours"] %>
-    </p>
-<% } %>
