@@ -24,7 +24,7 @@ An interactive, searchable map of publicly traded companies worldwide, visualizi
 
 ## 🚀 Live Demo
 
-[View Live Demo](#) *(Add your GitHub Pages URL here)*
+[View Live Demo](https://jkvyff.github.io/atlas-of-public-companies/) 
 
 ## 📊 Data
 
@@ -63,7 +63,7 @@ The map includes data on **15,000+ public companies** sourced from:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/atlas-of-public-companies.git
+   git clone https://github.com/jkvyff/atlas-of-public-companies.git
    cd atlas-of-public-companies
    ```
 
@@ -141,27 +141,6 @@ map_centroid: [37.3541, -121.9552],  // [latitude, longitude]
 defaultZoom: 3
 ```
 
-## 🌐 Deployment to GitHub Pages
-
-1. **Create a new GitHub repository**
-   - Go to https://github.com/new
-   - Name it (e.g., `atlas-of-public-companies`)
-   - Don't initialize with README
-
-2. **Push your code**
-   ```bash
-   git remote set-url origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-   git add .
-   git commit -m "Initial commit: Atlas of Public Companies"
-   git push -u origin master
-   ```
-
-3. **Enable GitHub Pages**
-   - Go to repository Settings → Pages
-   - Under "Source", select `master` branch
-   - Click Save
-   - Your site will be live at: `https://YOUR_USERNAME.github.io/YOUR_REPO/`
-
 ## 📝 Data Format
 
 The map expects GeoJSON with this structure:
@@ -237,8 +216,3 @@ The goal: Recreate a useful tool that investors missed, using open-source techno
 ## 📧 Contact
 
 Created by Jens Kristian Vyff - feel free to reach out with questions or suggestions!
-
----
-
-⭐ If you find this project useful, please consider giving it a star on GitHub!
-

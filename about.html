@@ -2,6 +2,7 @@
 <html lang='en'>
   <head>
     <title>Atlas of Public Stocks</title>
+    <base href="/atlas-of-public-companies/">
 
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -27,22 +28,22 @@
 
     <!-- Styles -->
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
 
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/custom.css"/>
+    <link rel="stylesheet" href="css/custom.css"/>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="/lib/jquery-3.3.1.min.js"></script>
-    <script src="/lib/popper.min.js"></script>
-    <script src="/lib/bootstrap.min.js"></script>
+    <script src="lib/jquery-3.3.1.min.js"></script>
+    <script src="lib/popper.min.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
 
   </head>
   <body>
 
     <nav class="navbar navbar-expand-md navbar-light mb-2">
-      <a class="navbar-brand" href="/">
+      <a class="navbar-brand" href="./">
         Atlas of public companies
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,10 +53,10 @@
       <div class="collapse navbar-collapse mr-auto" id="navbarsExampleDefault">
         <ul class="navbar-nav ml-auto">
           <li class='nav-item'>
-            <a class="nav-link" href="/"><i class="fa fa-map-marker" aria-hidden="true"></i> Map</a>
+            <a class="nav-link" href="./"><i class="fa fa-map-marker" aria-hidden="true"></i> Map</a>
           </li>
           <li class='nav-item'>
-            <a class="nav-link active" href="/about.html"><i class="fa fa-info-circle" aria-hidden="true"></i> About</a>
+            <a class="nav-link active" href="about.html"><i class="fa fa-info-circle" aria-hidden="true"></i> About</a>
           </li>
         </ul>
       </div>
@@ -79,9 +80,9 @@
                 </blockquote>
 
                 <h4 class="mt-4">Why Recreate It?</h4>
-                <p>I discovered the Atlas through <a href="https://twitter.com/MikeFritzell/status/1844166649668890755" target="_blank">a tweet from Michael Fritzell</a>, who wrote: <em>"Still mourning since the day the Atlas of Publicly Listed Stocks went offline."</em> That sentiment resonated with me - this was clearly a tool people found valuable and missed.</p>
+                <p>I discovered the Atlas through <a href="https://twitter.com/MikeFritzell/status/1976842058632773648" target="_blank">a tweet from Michael Fritzell</a>, who wrote: <em>"Still mourning since the day the Atlas of Publicly Listed Stocks went offline."</em> That sentiment resonated with me - this was clearly a tool people found valuable and missed.</p>
 
-                <p>Curious to learn more, I searched the <a href="https://web.archive.org" target="_blank">Wayback Machine</a> to explore the original. Unfortunately, the archived version didn't work - it relied on Google Fusion Tables, a service Google shut down in 2019. The data and functionality were lost.</p>
+                <p>Curious to learn more, I searched the <a href="https://web.archive.org/web/20140706112839/http://atlasofpublicstocks.com/index.html" target="_blank">Wayback Machine</a> to explore the original. Unfortunately, the archived version didn't work - it relied on Google Fusion Tables, a service Google shut down in 2019. The data and functionality were lost.</p>
 
                 <h4 class="mt-4">Archaeological Reconstruction</h4>
                 <p>Determined to understand what the original Atlas could do, I started digging:</p>
@@ -106,7 +107,7 @@
                 <p>The data quality may not match Bloomberg, but the <strong>structure is there</strong>. Anyone with access to premium data sources like Bloomberg or EODHD can fork this project and replace the data with higher-quality information.</p>
 
                 <h4 class="mt-4">Open Source</h4>
-                <p>This entire project is <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank">open source on GitHub</a>. The code, data pipeline scripts, and documentation are all freely available. If you have ideas for improvements or access to better data, contributions are welcome!</p>
+                <p>This entire project is <a href="https://github.com/jkvyff/atlas-of-public-companies" target="_blank">open source on GitHub</a>. The code, data pipeline scripts, and documentation are all freely available. If you have ideas for improvements or access to better data, contributions are welcome!</p>
 
                 <h4 class="mt-4">Current Status</h4>
                 <p>The map currently includes <strong>15,000+ public companies</strong> worldwide with:</p>

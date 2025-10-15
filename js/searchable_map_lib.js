@@ -79,12 +79,18 @@ var SearchableMapLib = {
 
       // method that we will use to update the control based on feature properties passed
       var hover_template;
-      $.get( "../templates/hover.ejs", function( template ) {
+      $.get( "templates/hover.ejs", function( template ) {
         hover_template = template;
+      }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("Failed to load hover template:", textStatus, errorThrown);
       });
       SearchableMapLib.info.update = function (props) {
         if (props) {
-          this._div.innerHTML = ejs.render(hover_template, {obj: props});
+          if (hover_template) {
+            this._div.innerHTML = ejs.render(hover_template, {obj: props});
+          } else {
+            this._div.innerHTML = 'Loading...';
+          }
         }
         else {
           this._div.innerHTML = 'Hover over a ' + SearchableMapLib.recordName;
@@ -210,12 +216,15 @@ var SearchableMapLib = {
     }
     else {
       var row_content;
-      $.get( "../templates/table-row.ejs", function( template ) {
+      $.get( "templates/table-row.ejs", function( template ) {
           for (idx in SearchableMapLib.currentResults.features) {
             row_content = ejs.render(template, {obj: SearchableMapLib.currentResults.features[idx].properties});
 
             results.append(row_content);
           }
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+          console.error("Failed to load table-row template:", textStatus, errorThrown);
+          results.append("<p class='text-danger'>Failed to load list view template.</p>");
         });
       }
   },
@@ -245,10 +254,14 @@ var SearchableMapLib = {
       console.log(data);
     }
     var modal_content;
-    $.get( "../templates/popup.ejs", function( template ) {
+    $.get( "templates/popup.ejs", function( template ) {
         modal_content = ejs.render(template, {obj: data});
         $('#modal-pop').modal();
         $('#modal-main').html(modal_content);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("Failed to load popup template:", textStatus, errorThrown);
+        $('#modal-main').html("<p class='text-danger'>Failed to load popup template. Error: " + textStatus + "</p>");
+        $('#modal-pop').modal();
     });
   },
 
@@ -367,7 +380,7 @@ var SearchableMapLib = {
 
   addIcon: function() {
     SearchableMapLib.centerMark = new L.Marker(SearchableMapLib.currentPinpoint, { icon: (new L.Icon({
-            iconUrl: '/img/blue-pushpin.png',
+            iconUrl: 'img/blue-pushpin.png',
             iconSize: [32, 32],
             iconAnchor: [10, 32]
     }))});
